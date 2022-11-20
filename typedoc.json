@@ -1,0 +1,11 @@
+{
+    "entryPoints": [
+        "./src/index.ts",
+        "./src/routers/default.ts",
+        "./src/routers/delete.ts",
+        "./src/routers/patch.ts",
+        "./src/routers/post.ts",
+        "./src/models/notes.ts"
+    ],
+    "out": "./docs"
+}

@@ -1,45 +1,36 @@
 import * as express from 'express';
 import { Note } from '../models/note';
 
-/**
- * Router de obtencion
- */
 export const getRouter = express.Router();
 
-/**
- * Devuelve una nota a partir del nombre
- * Estado 404: No existe la nota en la base de datos
- * Estado 500: Otros errores
- * Estado 200: Nota devuelta
- */
-getRouter.get('/notes', (req, res) => {
-  const filter = req.query.name?{name: req.query.name.toString()}:{};
+getRouter.get("/notes", (req, res) => {
+  const filter = req.query.name
+    ? { name: req.query.name.toString() }
+    : {};
+  if (!filter.name) {
+    res.status(403).send("The name is required");
+    return;
+  }
 
-  Note.find(filter).then((note) => {
-    if (note.length !== 0) {
-      res.status(201).send(note);
-    } else {
-      res.status(404).send();
-    }
-  }).catch(() => {
-    res.status(500).send();
-  });
+  Note.findOne(filter)
+    .then((note) => {
+      if (!note) {
+        res.status(404).send("The note cannot be found");
+      } else {
+        res.status(200).send(note);
+      }
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
 });
 
-/**
- * Devuelve una nota a partir del id
- * Estado 404: No existe la nota en la base de datos
- * Estado 500: Otros errores
- * Estado 200: Nota devuelta
- */
-getRouter.get('/notes/:id', (req, res) => {
-  Note.findById(req.params.id).then((note) => {
-    if (!note) {
-      res.status(404).send();
-    } else {
-      res.send(note);
-    }
-  }).catch(() => {
-    res.status(500).send();
-  });
+getRouter.get("/notes/:id", (req, res) => {
+  Note.findById(req.params.id)
+    .then((note) => {
+      res.status(200).send(note);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
 });

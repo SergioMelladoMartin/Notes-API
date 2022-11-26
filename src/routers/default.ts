@@ -5,6 +5,8 @@ import * as express from 'express';
  */
 export const defaultRouter = express.Router();
 
+defaultRouter.use(express.static('app/public'));
+
 /**
  * Router por defecto
  * Devuelve el estado 501
